@@ -1,1 +1,6 @@
-export { MessageTransport, messageTransport } from "./message";
+export {
+  MessageTransport,
+  messageTransport,
+  MessageCreateTransport,
+  messageCreateTransport,
+} from "./message";
