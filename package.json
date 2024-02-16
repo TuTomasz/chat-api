@@ -1,0 +1,16 @@
+{
+  "name": "giftogram-chat-backend",
+  "version": "1.0.0",
+  "description": "Api backend for a mysql chat application",
+  "main": "index.js",
+  "scripts": {
+    "build": "pnpm run --r build",
+    "migrate:up": "pnpm run --r migrate:up",
+    "compose:up": "docker compose -f docker-compose.yml up -d --wait",
+    "clean": "rm -rf node_modules && pnpm run --r clean",
+    "start:dev": " pnpm compose:up && pnpm run migrate:up && pnpm run --parallel start:dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
