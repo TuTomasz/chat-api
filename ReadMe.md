@@ -18,7 +18,7 @@ In root directory, run.
 pnpm start:dev
 ```
 
-It will download all the necessary dependencies, Docker images, run the migrations, and start the service locally. This can take about 20 seconds the first time around.
+It will download all the necessary dependencies, Docker images, run the migrations, and start the service locally. This can take about 20 seconds the first time around (You will see server runing on port 5005 when its up and running).
 
 ## Notes
 
