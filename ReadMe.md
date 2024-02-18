@@ -32,6 +32,8 @@ It will download all the necessary dependencies, Docker images, run the migratio
 
 - Core functionality of the chat application is under services/chat-service/src.
 
+- I added INDEX (sender_id and receiver_id) to speed up lookup queries since we would do plenty of message lookups.
+
 - I also hashed passwords for the user creation portion of the application for extra security.
 
 - I included a SQL dump file in database folder
@@ -43,6 +45,6 @@ It will download all the necessary dependencies, Docker images, run the migratio
 - Also, in a real application, login would return an authorization token that other chat endpoints would require in headers to communicate with other users. This way You can only send messages on your own behalf since this would identify your user_id. Right now
   this chat app is a bit of wild west.
 
-- I would also add INDEX (sender_id) and (receiver_id) to speed up lookup queries since we would do plenty of message lookups.
+- We would also want to paginate results since we should prevent querying progressively larger results as conversations get longer between participants.
 
 - I would probobly also make view_messages a POST request to not openly display ID of user conversations you are fetching. Again authority header would be needed to allow you to fetch only your conversations with a particular user.

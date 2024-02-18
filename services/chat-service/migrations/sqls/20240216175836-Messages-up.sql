@@ -6,5 +6,6 @@ CREATE TABLE Messages (
   message TEXT,
   epoch BIGINT,
   FOREIGN KEY (sender_user_id) REFERENCES Users(user_id),
-  FOREIGN KEY (receiver_user_id) REFERENCES Users(user_id)
+  FOREIGN KEY (receiver_user_id) REFERENCES Users(user_id),
+  INDEX (sender_user_id, receiver_user_id)
 );
