@@ -1,5 +1,5 @@
 export {
-  User,
+  UserEntity,
   UserCreateTransport,
   UserTransport,
   userCreateTransport,

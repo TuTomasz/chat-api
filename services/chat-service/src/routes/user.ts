@@ -2,8 +2,8 @@ import fastify, { FastifyInstance } from "fastify";
 import { z } from "zod";
 import { errorResponse, ErrorResponse } from "@repo/types";
 import { User } from "@repo/types";
-import { RowDataPacket } from "mysql2";
 import bcrypt from "bcrypt";
+import { Entity } from "../utility/dbQueryType";
 
 export const user = async (fastify: FastifyInstance) => {
   //////////////////////////////////////////////////
@@ -20,7 +20,6 @@ export const user = async (fastify: FastifyInstance) => {
         response: {
           200: User.userTransport,
           400: errorResponse,
-          500: errorResponse,
         },
       },
     },
@@ -31,12 +30,13 @@ export const user = async (fastify: FastifyInstance) => {
       const hashedPassword = await bcrypt.hash(password, salt);
 
       try {
+        // TODO Need proper return type post insert
         const [rows] = await fastify.mysql.query<any>(
           "INSERT INTO Users (email, password, first_name, last_name) VALUES (?, ?, ?, ?)",
           [email, hashedPassword, first_name, last_name]
         );
 
-        const [user] = await fastify.mysql.query<any>(
+        const [user] = await fastify.mysql.query<Entity<User.UserEntity>>(
           "SELECT * FROM Users WHERE user_id = ?",
           [rows.insertId]
         );
@@ -79,7 +79,6 @@ export const user = async (fastify: FastifyInstance) => {
         response: {
           200: User.userTransport,
           400: errorResponse,
-          500: errorResponse,
         },
       },
     },
@@ -90,15 +89,16 @@ export const user = async (fastify: FastifyInstance) => {
       };
 
       try {
-        const [rows] = await fastify.mysql.query<
-          User.User[] & RowDataPacket[][]
-        >("SELECT * FROM Users WHERE email = ?", [email]);
+        const [rows] = await fastify.mysql.query<Entity<User.UserEntity>>(
+          "SELECT * FROM Users WHERE email = ?",
+          [email]
+        );
 
         if (rows.length === 0) {
           return reply.status(400).send({
             error_code: 400,
-            error_title: "not found",
-            error_message: "User not found",
+            error_title: "User not found",
+            error_message: "Could not find user with that email",
           });
         }
 
@@ -110,7 +110,7 @@ export const user = async (fastify: FastifyInstance) => {
           return reply.status(400).send({
             error_code: 400,
             error_title: "Invalid password",
-            error_message: "Invalid password",
+            error_message: "Password is incorrect",
           });
         }
 
@@ -123,7 +123,7 @@ export const user = async (fastify: FastifyInstance) => {
       } catch (err: any) {
         return reply.status(400).send({
           error_code: 400,
-          error_title: "Failed to get user",
+          error_title: "Something went wrong",
           error_message: err.message,
         });
       }
@@ -152,11 +152,19 @@ export const user = async (fastify: FastifyInstance) => {
     async (request, reply) => {
       const { userId } = request.params;
 
+      if (isNaN(parseInt(userId))) {
+        return reply.status(400).send({
+          error_code: 400,
+          error_title: "Invalid User ID",
+          error_message: "Provided user id is not valid",
+        });
+      }
+
       try {
-        // TODO Type support here is terrible or maybe its just me.
-        const [rows] = await fastify.mysql.query<
-          User.UserTransport[] & RowDataPacket[][]
-        >("SELECT * FROM Users WHERE  user_id != ?", [userId]);
+        const [rows] = await fastify.mysql.query<Entity<User.UserEntity>>(
+          "SELECT * FROM Users WHERE  user_id != ?",
+          [userId]
+        );
 
         const transport = rows.map((row) => {
           return {
@@ -167,7 +175,6 @@ export const user = async (fastify: FastifyInstance) => {
           };
         });
 
-        console.log(transport);
         return transport;
       } catch (err: any) {
         return reply.status(400).send({

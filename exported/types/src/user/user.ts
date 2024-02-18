@@ -1,9 +1,8 @@
 import z from "zod";
 
-export const user = z.object({
+export const userEntity = z.object({
   user_id: z.number(),
   password: z.string(),
-
   email: z.string().email(),
   first_name: z.string(),
   last_name: z.string(),
@@ -23,7 +22,7 @@ export const userCreateTransport = z.strictObject({
   last_name: z.string(),
 });
 
-export type User = z.infer<typeof user>;
+export type UserEntity = z.infer<typeof userEntity>;
 
 export type UserTransport = z.infer<typeof userTransport>;
 export type UserCreateTransport = z.infer<typeof userCreateTransport>;

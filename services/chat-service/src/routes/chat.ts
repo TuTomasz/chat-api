@@ -7,6 +7,7 @@ import {
 } from "@repo/types";
 import { FastifyInstance } from "fastify";
 import { z } from "zod";
+import { Entity } from "../utility/dbQueryType";
 
 export const chat = async (fastify: FastifyInstance) => {
   //////////////////////////////////////////////////
@@ -37,7 +38,6 @@ export const chat = async (fastify: FastifyInstance) => {
 
       console.log(parseInt(sender_user_id), parseInt(receiver_user_id));
 
-      // make user both are numbers
       if (
         isNaN(parseInt(sender_user_id)) ||
         isNaN(parseInt(receiver_user_id))
@@ -50,7 +50,7 @@ export const chat = async (fastify: FastifyInstance) => {
       }
 
       try {
-        const [rows] = await fastify.mysql.query<any>(
+        const [rows] = await fastify.mysql.query<Entity<Chat.MessageEntity>>(
           "SELECT * FROM Messages WHERE (sender_user_id = ? AND receiver_user_id = ?) OR (sender_user_id = ? AND receiver_user_id = ?) ORDER BY epoch",
           [sender_user_id, receiver_user_id, receiver_user_id, sender_user_id]
         );
@@ -98,10 +98,8 @@ export const chat = async (fastify: FastifyInstance) => {
     async (request, reply) => {
       const { message, sender_user_id, receiver_user_id } = request.body;
 
-      console.log(message, sender_user_id, receiver_user_id);
-
       try {
-        const [rows] = await fastify.mysql.query(
+        const [rows] = await fastify.mysql.query<Entity<Chat.MessageEntity>>(
           "INSERT INTO Messages (sender_user_id, receiver_user_id, message, epoch) VALUES (?, ?, ?, ?)",
           [sender_user_id, receiver_user_id, message, Date.now()]
         );

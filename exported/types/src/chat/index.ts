@@ -1,4 +1,5 @@
 export {
+  MessageEntity,
   MessageTransport,
   messageTransport,
   MessageCreateTransport,
