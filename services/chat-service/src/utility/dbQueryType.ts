@@ -1,0 +1,5 @@
+import { RowDataPacket } from "mysql2";
+
+//  TYPE THAT WRAPS THE MYSQL2 ROWDATAPACKET TYPE TO MAKE IT EASIER TO WORK WITH
+//  AND IT EXTENDS WITH OUR OWN ENTITY TYPE THAT REFLECTS THE STRUCTURE OF THE TABLE
+export type Entity<T> = T & RowDataPacket[] & RowDataPacket[][];
