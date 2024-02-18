@@ -48,3 +48,11 @@ It will download all the necessary dependencies, Docker images, run the migratio
 - We would also want to paginate results since we should prevent querying progressively larger results as conversations get longer between participants.
 
 - I would probobly also make view_messages a POST request to not openly display ID of user conversations you are fetching. Again authority header would be needed to allow you to fetch only your conversations with a particular user.
+
+## Endpoints
+
+- POST http://localhost:5005/signup
+- POST http://localhost:5005/login
+- POST http://localhost:5005/send_message
+- GET http://localhost:5005/list_all_users
+- GET http://localhost:5005/view_messages

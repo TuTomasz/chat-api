@@ -137,7 +137,7 @@ export const user = async (fastify: FastifyInstance) => {
     Params: { userId: string };
     Reply: User.UserTransport[] | ErrorResponse;
   }>(
-    "/:userId",
+    "/list_all_users/:userId",
     {
       schema: {
         params: z.object({
