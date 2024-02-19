@@ -15,6 +15,12 @@ npm install -g pnpm
 In root directory, run.
 
 ```
+pnpm install
+```
+
+then
+
+```
 pnpm start:dev
 ```
 
